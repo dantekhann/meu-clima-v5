@@ -215,3 +215,24 @@ button:hover {
   color: var(--texto-secundario);
   margin-top: 10px;
 }
+.toggle-container {
+    margin: 10px 0 20px 0;
+}
+
+.toggle-container {
+    margin-bottom: 20px;
+    display: none; /* Começa escondido */
+}
+
+#btnAlternarUnidade {
+    background: #1a1a1c;
+    color: var(--destaque);
+    border: 1px solid var(--destaque);
+    padding: 8px 15px;
+    font-size: 0.8rem;
+}
+
+#btnAlternarUnidade:hover {
+    background: var(--destaque);
+    color: #000;
+}
