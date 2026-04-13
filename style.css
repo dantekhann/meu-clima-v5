@@ -1,105 +1,217 @@
+/* --- VARIÁVEIS E RESET --- */
+:root {
+  --destaque: #00d2ff;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --texto-secundario: #a8a8b3;
+  --cor-erro: #ff5555;
+}
+
 body {
-    background-color: #0b0b0c;
-    color: white;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-    margin: 0;
+  background-color: #0b0b0c;
+  color: white;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  margin: 0;
 }
 
 #app {
-    width: 100%;
-    max-width: 1200px;
-    text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
 }
 
+h1 {
+  font-weight: 300;
+  margin-bottom: 30px;
+}
+
+/* --- ÁREA DE INPUT --- */
 .input-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 input {
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #1a1a1c;
-    color: white;
-    width: 280px;
-    outline: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1a1c;
+  color: white;
+  width: 280px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: var(--destaque);
 }
 
 button {
-    padding: 12px 25px;
-    border-radius: 8px;
-    border: none;
-    background: #00d2ff;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
+  padding: 12px 25px;
+  border-radius: 8px;
+  border: none;
+  background: var(--destaque);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    background 0.3s;
+}
+
+button:hover {
+  background: #00b8e6;
+  transform: scale(1.05);
 }
 
 #btnLimparTudo {
-    margin-top: 40px;
-    background: #ff5555;
-    color: white;
+  margin-top: 40px;
+  background: var(--cor-erro);
+  color: white;
 }
 
-/* Lista de Seleção de Homônimos */
+/* --- LISTA DE HOMÔNIMOS --- */
 .lista-selecao {
-    background: #1a1a1c;
-    border-radius: 10px;
-    margin: 15px auto;
-    max-width: 450px;
-    border: 1px solid #333;
-    overflow: hidden;
+  background: #1a1a1c;
+  border-radius: 10px;
+  margin: 15px auto;
+  max-width: 500px;
+  border: 1px solid #333;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .item-local {
-    padding: 15px;
-    border-bottom: 1px solid #333;
-    cursor: pointer;
-    text-align: left;
-    transition: 0.2s;
+  padding: 15px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
 }
 
-.item-local:hover { background: #2d2d30; }
+.item-local:last-child {
+  border-bottom: none;
+}
 
-/* GRID DE COMPARAÇÃO */
+.item-local:hover {
+  background: #2d2d30;
+  padding-left: 20px;
+}
+
+/* --- GRID DE COMPARATIVO --- */
 #weather-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
 }
 
-/* Card de Clima */
+/* --- CARD DE CLIMA (FIXING OVERFLOW) --- */
 .weather-box {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
-    padding: 30px 20px;
-    width: 240px;
-    position: relative;
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 40px 15px 25px 15px; /* Espaço extra no topo para o botão */
+  width: 260px;
+  min-height: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: slideUp 0.4s ease-out;
 }
 
-/* Botão de Remover Card */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Botão X - Z-index alto para ficar sempre no topo */
 .btn-fechar {
-    position: absolute;
-    right: 15px;
-    top: 12px;
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.3rem;
-    cursor: pointer;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: 0.3s;
 }
 
-.btn-fechar:hover { color: #ff5555; }
+.btn-fechar:hover {
+  background: var(--cor-erro);
+  transform: rotate(90deg);
+}
 
+/* Tratamento de nomes gigantes (Ex: Llanfairpwll...) */
+.weather-box h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  width: 100%;
+  line-height: 1.2;
+  padding: 0 5px;
+  box-sizing: border-box;
+
+  /* Quebra palavras longas à força */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+
+  /* Limita a 3 linhas com reticências */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.local-info {
+  font-size: 0.85rem;
+  color: var(--texto-secundario);
+  margin-top: 5px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- DADOS INTERNOS --- */
 .temp-grande {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 15px 0;
+  font-size: 3.2rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.condicao-texto {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.detalhes-clima {
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  margin-top: 10px;
 }

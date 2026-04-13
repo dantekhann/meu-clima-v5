@@ -1,44 +1,53 @@
-README - Meu Clima v4: Edição Tempo Real (v2)
-Este documento detalha as atualizações e a evolução técnica do projeto Meu Clima da versão 3 para a 4, focando em experiência do usuário (UX), precisão nos dados e design minimalista.
+ClimaHub v5: Dashboard Multi-Localidade & Inteligência Geográfica
 
-🚀 Visão Geral
-A versão 4 traz um refinamento visual e funcional, focando em uma interface limpa e em informações contextuais dinâmicas. O título foi atualizado para "Previsão em Tempo Real", refletindo a natureza instantânea dos dados consumidos via API.
-️
-O que mudou? (v3 vs v4)
-Funcionalidade Versão 3 Versão 4 (Atual)
-Título Previsão Realtime Previsão em Tempo Real
-Estado Temporal Estático Dinâmico (Detecção de
-☀️/🌙 via API)
+O ClimaHub (evolução do Meu Clima) é uma aplicação front-end de monitoramento meteorológico em tempo real. A versão 5 marca a transição de uma ferramenta de busca simples para um painel de comparação persistente, capaz de gerenciar múltiplas localidades simultaneamente com tratamento avançado de dados geográficos.
 
-Posicionamento Ícone isolado Composição Visual (Sol/Lua integrado à box)
-Tipografia Padrão Hierarquia Visual (Pesos maiores para temperatura)
+🚀 O que há de novo na v5?
+Diferente das versões anteriores que exibiam apenas um resultado por vez, a v5 foi reconstruída para ser um Hub.
 
-🧠 Lógica de Implementação
+1. Sistema de Comparação e Grid Dinâmico
+Multi-Cards: Agora é possível adicionar várias cidades ao mesmo tempo, permitindo a comparação direta de temperaturas e condições entre diferentes regiões.
 
-1. Dinâmica Sol e Lua Integrado diretamente com a API Open-Meteo, o código agora interpreta o parâmetro is_day para fornecer contexto astronômico em tempo real.
+Gerenciamento de Cards: Cada card possui independência, com a função de remoção individual (botão ✕) que atualiza o layout e a memória instantaneamente.
 
-● Lógica de Estado: O sistema identifica se na localidade pesquisada é dia ou noite, exibindo o emoji correspondente (☀️ para dia, 🌙 para noite).
+2. Memória Inteligente (Cache de 1 Hora)
+Persistência com LocalStorage: As cidades adicionadas não somem ao atualizar a página (F5). Elas ficam salvas no navegador do usuário.
 
-● Composição Interna: O emoji de estado foi inserido diretamente dentro do card (box), posicionado logo abaixo do ícone principal da nuvem/condição, criando uma leitura unificada da situação climática.
+Auto-Faxina (TTL - Time to Live): Implementamos uma lógica de expiração. Se uma cidade foi adicionada há mais de 1 hora, o sistema a remove automaticamente do cache no próximo carregamento para garantir que o painel permaneça limpo e relevante.
 
-● Ícones Adaptativos: Mesmo em condições de céu limpo, o sistema substitui
-automaticamente os ícones de sol por lua durante o período noturno local.
-2. Design Minimalista e Legibilidade.
+3. Resolução de Ambiguidades (Homônimos)
+Seleção de Localidade: Ao buscar cidades com nomes comuns (ex: Rio de Janeiro), o sistema agora apresenta uma lista de escolha detalhando Estado/Província e País, evitando que o usuário visualize os dados do local errado.
 
-● Fundo Neutro: A interface utiliza tons de cinza azulado e brancos (#f0f2f5),
-eliminando distrações visuais e garantindo que os dados de temperatura sejam o ponto focal.
+4. Robustez Visual e UX
+Tratamento de Nomes Gigantes: Implementação de word-wrap e limite de linhas (line-clamp) para nomes de cidades extremamente longos, garantindo que o design nunca quebre.
 
-● Contraste Inteligente: As cores dos textos e títulos são ajustadas para garantir leitura, independentemente da luminosidade do ambiente.
+Identificação Global: Cada card agora exibe a hierarquia geográfica completa: Cidade, Estado e País.
 
-● Estética Glassmorphism: O card principal utiliza efeitos de desfoque e transparência para um aspecto moderno e leve.
+Modo Dia/Noite: Detecção automática via parâmetro is_day da API para exibição de ícones contextuais (☀️/🌙).
 
-📂 Estrutura de Arquivos
-● index.html: Estrutura semântica atualizada com o novo título.
-● style.css: Estilização neutra com foco em variáveis para manutenção simplificada.
-● script.js: Lógica de consumo da API Open-Meteo com a nova integração de estado
-temporal.
+🧠 Lógica Técnica
+Sanitização de Input: Uso de Regex avançado para ignorar emojis e caracteres especiais, evitando erros de requisição na API.
 
-🔧 Como Rodar o Projeto Clone este repositório: git clone https://github.com/SEU-USUARIO/meu-clima-v4.git
+Arquitetura de Dados: O sistema salva apenas as coordenadas e nomes (metadados). A temperatura é sempre buscada do zero ao carregar o card, garantindo precisão absoluta.
 
-👤 Desenvolvido por: Paulo Dante Coelho Neto
-https://github.com/dantekhann
+Design: Estética Glassmorphism sobre fundo escuro (#0b0b0c) para reduzir a fadiga visual.
+
+📂 Estrutura do Projeto
+index.html: Dashboard com containers separados para notificações de busca e grid de exibição.
+
+style.css: Grid flexível, tratamento de overflow de texto e estilização de cards responsivos.
+
+script.js: Engine principal gerenciando Fetch API (Open-Meteo), LocalStorage e lógica de expiração por timestamp.
+
+🔧 Como utilizar
+Busque por uma cidade no campo de pesquisa.
+
+Se houver mais de um resultado, selecione o correto na lista exibida.
+
+O card será fixado no painel. Você pode adicionar quantos desejar.
+
+Para limpar tudo, utilize o botão "Limpar Histórico" que surge ao final do grid.
+
+👤 Desenvolvedor: Paulo Dante Coelho Neto
+
+GitHub: dantekhann

@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparador de Clima Pro</title>
+    <title>ClimaHub - Tempo Real</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <h1>Comparador de <span style="color: #00d2ff;">Clima</span></h1>
+        <h1>Clima<span style="color: #00d2ff;">Hub</span></h1>
         
         <div class="input-group">
-            <input type="text" id="cidadeInput" placeholder="Digite a cidade (ex: São-Tomé)..." autocomplete="off">
+            <input type="text" id="cidadeInput" placeholder="Busque uma cidade..." autocomplete="off">
             <button id="btnVerificar" onclick="buscarClimaReal()">Adicionar</button>
         </div>
 
         <div id="notificacao-container"></div>
-        
         <div id="weather-container"></div>
 
-        <button id="btnLimparTudo" onclick="limparTodaMemoria()" style="display: none;">Limpar Histórico</button>
+        <button id="btnLimparTudo" onclick="limparTodaMemoria()" style="display: none;">Limpar Painel</button>
     </div>
 
     <script src="script.js"></script>

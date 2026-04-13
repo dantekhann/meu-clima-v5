@@ -8,8 +8,7 @@ const weatherConfig = {
     80: { label: "Pancadas", icon: "🌦️", color: "#00d2ff" },
 };
 
-// Tempo de expiração em milissegundos (1 hora = 60 * 60 * 1000)
-const EXPIRATION_TIME = 60 * 60 * 1000;
+const EXPIRATION_TIME = 60 * 60 * 1000; // 1 Hora de cache
 
 document.addEventListener("DOMContentLoaded", carregarMemoriaComFiltro);
 
@@ -31,7 +30,7 @@ async function buscarClimaReal() {
 
     if (!busca) return;
 
-    notificacao.innerHTML = `<p style="color: #a8a8b3">Buscando localidade...</p>`;
+    notificacao.innerHTML = `<p style="color: #a8a8b3">Localizando...</p>`;
 
     try {
         let geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(busca)}&count=10&language=pt&format=json`;
@@ -43,85 +42,69 @@ async function buscarClimaReal() {
             geoData = await resAlt.json();
         }
 
-        if (!geoData.results || geoData.results.length === 0) throw new Error("Local não encontrado.");
+        if (!geoData.results || geoData.results.length === 0) throw new Error("Localidade não encontrada.");
 
-        if (geoData.results.length > 1) {
-            notificacao.innerHTML = '<div class="lista-selecao"></div>';
-            const lista = notificacao.querySelector(".lista-selecao");
-            geoData.results.forEach(local => {
-                const item = document.createElement("div");
-                item.className = "item-local";
-                item.innerHTML = `<strong>${local.name}</strong> <small>(${local.admin1 || local.country})</small>`;
-                item.onclick = () => {
-                    salvarCidadeNaMemoria(local);
-                    adicionarCardAoGrid(local);
-                    notificacao.innerHTML = "";
-                    input.value = "";
-                };
-                lista.appendChild(item);
-            });
-        } else {
-            salvarCidadeNaMemoria(geoData.results[0]);
-            adicionarCardAoGrid(geoData.results[0]);
-            notificacao.innerHTML = "";
-            input.value = "";
-        }
+        notificacao.innerHTML = '<div class="lista-selecao"></div>';
+        const lista = notificacao.querySelector(".lista-selecao");
+
+        geoData.results.forEach(local => {
+            const item = document.createElement("div");
+            item.className = "item-local";
+            const infoTexto = `${local.admin1 ? local.admin1 + ', ' : ''}${local.country}`;
+            item.innerHTML = `<strong>${local.name}</strong> <br> <small style="color:#666">${infoTexto}</small>`;
+            
+            item.onclick = () => {
+                salvarCidadeNaMemoria(local);
+                adicionarCardAoGrid(local);
+                notificacao.innerHTML = "";
+                input.value = "";
+            };
+            lista.appendChild(item);
+        });
     } catch (e) {
         notificacao.innerHTML = `<p style="color: #ff5555">${e.message}</p>`;
     }
 }
 
-// LÓGICA DE MEMÓRIA COM TIMESTAMP
+// Chave do storage alterada para combinar com o novo nome
 function salvarCidadeNaMemoria(local) {
-    let salvas = JSON.parse(localStorage.getItem("meuClima_comparacao")) || [];
-    
-    // Adicionamos o horário atual (timestamp) ao objeto da cidade
-    const cidadeComTempo = {
-        ...local,
-        timestamp: new Date().getTime() 
-    };
+    let salvas = JSON.parse(localStorage.getItem("climaHub_data")) || [];
+    const cidadeComTempo = { ...local, timestamp: new Date().getTime() };
 
-    // Remove duplicata se já existir para atualizar o tempo
     salvas = salvas.filter(c => c.latitude !== local.latitude || c.longitude !== local.longitude);
-    
     salvas.push(cidadeComTempo);
-    localStorage.setItem("meuClima_comparacao", JSON.stringify(salvas));
+    localStorage.setItem("climaHub_data", JSON.stringify(salvas));
     atualizarVisibilidadeBotaoLimpar();
 }
 
 function carregarMemoriaComFiltro() {
-    let salvas = JSON.parse(localStorage.getItem("meuClima_comparacao")) || [];
+    let salvas = JSON.parse(localStorage.getItem("climaHub_data")) || [];
     const agora = new Date().getTime();
     
-    // FILTRAGEM: Mantém apenas o que foi buscado há menos de 1 hora
-    const validas = salvas.filter(cidade => {
-        return (agora - cidade.timestamp) < EXPIRATION_TIME;
-    });
-
-    // Atualiza o storage apenas com as válidas
-    localStorage.setItem("meuClima_comparacao", JSON.stringify(validas));
+    const validas = salvas.filter(c => (agora - c.timestamp) < EXPIRATION_TIME);
+    localStorage.setItem("climaHub_data", JSON.stringify(validas));
     
     validas.forEach(local => adicionarCardAoGrid(local));
     atualizarVisibilidadeBotaoLimpar();
 }
 
-function removerDaMemoria(latitude, longitude, elementoCard) {
-    let salvas = JSON.parse(localStorage.getItem("meuClima_comparacao")) || [];
-    salvas = salvas.filter(c => c.latitude !== latitude || c.longitude !== longitude);
-    localStorage.setItem("meuClima_comparacao", JSON.stringify(salvas));
+function removerDaMemoria(lat, lon, elementoCard) {
+    let salvas = JSON.parse(localStorage.getItem("climaHub_data")) || [];
+    salvas = salvas.filter(c => c.latitude !== lat || c.longitude !== lon);
+    localStorage.setItem("climaHub_data", JSON.stringify(salvas));
     elementoCard.remove();
     atualizarVisibilidadeBotaoLimpar();
 }
 
 function limparTodaMemoria() {
-    localStorage.removeItem("meuClima_comparacao");
+    localStorage.removeItem("climaHub_data");
     document.getElementById("weather-container").innerHTML = "";
     atualizarVisibilidadeBotaoLimpar();
 }
 
 function atualizarVisibilidadeBotaoLimpar() {
     const btn = document.getElementById("btnLimparTudo");
-    const salvas = JSON.parse(localStorage.getItem("meuClima_comparacao")) || [];
+    const salvas = JSON.parse(localStorage.getItem("climaHub_data")) || [];
     btn.style.display = salvas.length > 0 ? "inline-block" : "none";
 }
 
@@ -138,15 +121,17 @@ async function adicionarCardAoGrid(local) {
         card.className = 'weather-box';
         card.style.borderTop = `5px solid ${config.color}`;
 
+        const subLocal = `${local.admin1 ? local.admin1 + ', ' : ''}${local.country}`;
+
         card.innerHTML = `
             <button class="btn-fechar" onclick="removerDaMemoria(${local.latitude}, ${local.longitude}, this.parentElement)">✕</button>
             <h2 style="margin: 0;">${local.name}</h2>
-            <small style="color: #a8a8b3;">${local.admin1 || local.country}</small>
-            <div style="font-size: 1.8rem; margin: 15px 0;">${emojiEstado}</div>
+            <p class="local-info">${subLocal}</p>
+            <div style="font-size: 1.8rem; margin: 10px 0;">${emojiEstado}</div>
             <div class="temp-grande" style="color: ${config.color}">${Math.round(data.temperature)}°C</div>
             <p style="font-weight: bold;">${config.label} ${config.icon}</p>
         `;
 
         container.appendChild(card);
-    } catch (e) { console.error("Erro ao carregar card."); }
+    } catch (e) { console.error("Erro ao carregar clima."); }
 }
