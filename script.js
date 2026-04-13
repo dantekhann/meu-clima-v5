@@ -124,13 +124,17 @@ async function adicionarCardAoGrid(local) {
         const subLocal = `${local.admin1 ? local.admin1 + ', ' : ''}${local.country}`;
 
         card.innerHTML = `
-            <button class="btn-fechar" onclick="removerDaMemoria(${local.latitude}, ${local.longitude}, this.parentElement)">✕</button>
-            <h2 style="margin: 0;">${local.name}</h2>
-            <p class="local-info">${subLocal}</p>
-            <div style="font-size: 1.8rem; margin: 10px 0;">${emojiEstado}</div>
-            <div class="temp-grande" style="color: ${config.color}">${Math.round(data.temperature)}°C</div>
-            <p style="font-weight: bold;">${config.label} ${config.icon}</p>
-        `;
+    <button class="btn-fechar" title="Remover" onclick="removerDaMemoria(${local.latitude}, ${local.longitude}, this.parentElement)">✕</button>
+    <h2 style="margin: 0; font-size: 1.4rem;">${local.name}</h2>
+    <p class="local-info">${subLocal}</p>
+    
+    <div class="temp-grande" style="color: ${config.color}">${Math.round(data.temperature)}°C</div>
+    
+    <div style="font-size: 1.8rem; margin: 15px 0;">${emojiEstado}</div>
+    
+    <p style="font-weight: bold; margin: 5px 0;">${config.label} ${config.icon}</p>
+    <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">Vento: ${data.windspeed} km/h</p>
+`;
 
         container.appendChild(card);
     } catch (e) { console.error("Erro ao carregar clima."); }
