@@ -6,20 +6,20 @@ O ClimaHub (evolução do Meu Clima) é uma aplicação front-end de monitoramen
 Diferente das versões anteriores que exibiam apenas um resultado por vez, a v5 foi reconstruída para ser um Hub.
 
 1. Sistema de Comparação e Grid Dinâmico
-Multi-Cards: Agora é possível adicionar várias cidades ao mesmo tempo, permitindo a comparação direta de temperaturas e condições entre diferentes regiões.
+   Multi-Cards: Agora é possível adicionar várias cidades ao mesmo tempo, permitindo a comparação direta de temperaturas e condições entre diferentes regiões.
 
 Gerenciamento de Cards: Cada card possui independência, com a função de remoção individual (botão ✕) que atualiza o layout e a memória instantaneamente.
 
 2. Memória Inteligente (Cache de 1 Hora)
-Persistência com LocalStorage: As cidades adicionadas não somem ao atualizar a página (F5). Elas ficam salvas no navegador do usuário.
+   Persistência com LocalStorage: As cidades adicionadas não somem ao atualizar a página (F5). Elas ficam salvas no navegador do usuário.
 
 Auto-Faxina (TTL - Time to Live): Implementamos uma lógica de expiração. Se uma cidade foi adicionada há mais de 1 hora, o sistema a remove automaticamente do cache no próximo carregamento para garantir que o painel permaneça limpo e relevante.
 
 3. Resolução de Ambiguidades (Homônimos)
-Seleção de Localidade: Ao buscar cidades com nomes comuns (ex: Rio de Janeiro), o sistema agora apresenta uma lista de escolha detalhando Estado/Província e País, evitando que o usuário visualize os dados do local errado.
+   Seleção de Localidade: Ao buscar cidades com nomes comuns (ex: Rio de Janeiro), o sistema agora apresenta uma lista de escolha detalhando Estado/Província e País, evitando que o usuário visualize os dados do local errado.
 
 4. Robustez Visual e UX
-Tratamento de Nomes Gigantes: Implementação de word-wrap e limite de linhas (line-clamp) para nomes de cidades extremamente longos, garantindo que o design nunca quebre.
+   Tratamento de Nomes Gigantes: Implementação de word-wrap e limite de linhas (line-clamp) para nomes de cidades extremamente longos, garantindo que o design nunca quebre.
 
 Identificação Global: Cada card agora exibe a hierarquia geográfica completa: Cidade, Estado e País.
 
